@@ -14,12 +14,12 @@ int version = 1;
 String UUID = "";
 
 //Wait times for each sensor
-long gps_waitTime = 86400000, dht_waitTime = 60000, multigas_waitTime = 60000, 
-  dust_waitTime = 60000, barometer_waitTime = 60000, sound_waitTime = 5000, 
-  sunlight_waitTime = 60000, co2_waitTime = 60000;
+long battery_waitTime = 360000, gps_waitTime = 86400000, dht_waitTime = 360000, multigas_waitTime = 360000, 
+  dust_waitTime = 360000, barometer_waitTime = 360000, sound_waitTime = 360000, 
+  sunlight_waitTime = 360000, co2_waitTime = 360000;
   
 //Last run for each sensor
-long gps_lastStep, dht_lastStep, multigas_lastStep, dust_lastStep, 
+long battery_lastStep, gps_lastStep, dht_lastStep, multigas_lastStep, dust_lastStep, 
   barometer_lastStep, sound_lastStep, sunlight_lastStep, co2_lastStep;
 
 /*
@@ -96,106 +96,60 @@ void loop() {
    * This can maybe be done by using the error reading part.
    * 
    */
-
-  Serial.println();
   String p;
+  resetJSON();
+  //Check battery status
+  Serial.println("Battery");
+  p = getBattery();
+  Serial.println(p);
+  
+  
   //Finding location and posting it to server.
   if((millis()-gps_lastStep) > gps_waitTime || isnan(gps_lastStep) || gps_lastStep == 0){
     Serial.println("GPS");
     p = getCurrentPosition();
     Serial.println(p);
-    connectToServer();
-    post(p,getTableGPS());
-    disconnectServer();
     gps_lastStep = millis();
   }
 
   
-  if((millis()-dht_lastStep) > dht_waitTime || isnan(dht_lastStep)){
-    Serial.println("DHT");
-    //Finding DHT and posting it to server
-    p = getDHT();
-    if(!isDhtERROR()){
-      Serial.println(p);
-      connectToServer();
-      post(p,getTableDHT());
-      disconnectServer();
-    }
-    dht_lastStep = millis();
-  }
+  Serial.println("DHT");
+  //Finding DHT and posting it to server
+  p = getDHT();
+  Serial.println(p);
   
-  if((millis()-multigas_lastStep) > multigas_waitTime || isnan(multigas_lastStep)){
-    Serial.println("Multigas");
-    //Finding multigas and posting it to server
-    p = multigasReading();
-    if(!isMultigasError()){
-      Serial.println(p);
-      connectToServer();
-      post(p,getTableMultigas());
-      disconnectServer();
-    }
-    multigas_lastStep = millis();
-  }
+  
+  Serial.println("Multigas");
+  p = multigasReading();
+  Serial.println(p);
 
   //Not part of first version reason lack of space in box
-  /*if((millis()-dust_lastStep) > dust_waitTime || isnan(dust_lastStep)){
-    Serial.println("Dust");
-    p = dustReading();
-    if(!isDustError()){
-      Serial.println(p);
-      connectToServer();
-      post(p,getTableDust());
-      disconnectServer();
-    }
-    dust_lastStep = millis();
-  }*/
+  Serial.println("Dust");
+  p = dustReading();
+  Serial.println(p);
   
-  if((millis()-barometer_lastStep) > barometer_waitTime || isnan(barometer_lastStep)){
-    Serial.println("Barometer");
-    p = barometerReading();
-    if(!isBarometerError()){
-      Serial.println(p);
-      connectToServer();
-      post(p,getTableBarometer());
-      disconnectServer();
-    }
-    barometer_lastStep = millis();
-  }
   
-  if((millis()-sound_lastStep) > sound_waitTime || isnan(sound_lastStep)){
-    Serial.println("Sound");
-    p = soundReading();
-    if(!isSoundError()){
-      Serial.println(p);
-      connectToServer();
-      post(p,getTableSound());
-      disconnectServer();
-    }
-    sound_lastStep = millis();
-  }
+  /*Serial.println("Barometer");
+  p = barometerReading();
+  Serial.println(p); 
+  */
+  Serial.println("Sound");
+  p = soundReading();
+  Serial.println(p);  
   
-  if((millis()-sunlight_lastStep) > sunlight_waitTime || isnan(sunlight_lastStep)){
-    Serial.println("Sunlight");
-    p = sunlightReading();
-    if(!isSunlightError()){
-      Serial.println(p);
-      connectToServer();
-      post(p,getTableSunlight());
-      disconnectServer();
-    }
-    sunlight_lastStep = millis();
-  }
+  Serial.println("Sunlight");
+  p = sunlightReading();
+  Serial.println(p);  
   
-  if((millis()-co2_lastStep) > co2_waitTime || isnan(co2_lastStep)){
-    Serial.println("CO2");
-    p = co2Reading();
-    if(!isCO2Error()){
-      Serial.println(p);
-      connectToServer();
-      post(p,getTableCO2());
-      disconnectServer();
-    }
-    co2_lastStep = millis();
-  }
-  delay(5000);
+  /*Serial.println("CO2");
+  p = co2Reading();
+  Serial.println(p);
+  */
+  Serial.println("POST");
+  connectToServer();
+  post(getJSON(true),"sensorboxall");
+  disconnectServer();
+
+  delay(360000);
 }
+

@@ -1,5 +1,5 @@
 #define SOUND_SENSOR A0
-unsigned long sound_sampletime_ms = 2500;//sampe 1s ;
+unsigned long sound_sampletime_ms = 10000;//sampe 1s ;
 
 bool soundError = false;
 
@@ -12,9 +12,7 @@ String getTableSound(){
 }
 
 String soundReading()
-{
-  resetJSON();
-  
+{ 
   soundError = false;
   
   long sound_starttime = millis();
@@ -36,18 +34,21 @@ String soundReading()
   if(sum/count == 0){
     soundError = true;
   }
-  
-  addOtherVariable("low", (String)low);
-  addOtherVariable("high", (String)high);
-  addOtherVariable("avg", (String)(sum/count));
-  addOtherVariable("meassurements", (String)count);
+  else {
+    addStringVariable(getTableSound(),getTableSound());
+    addOtherVariable(getTableSound()+"low", (String)low);
+    addOtherVariable(getTableSound()+"high", (String)high);
+    addOtherVariable(getTableSound()+"avg", (String)(sum/count));
+    addOtherVariable(getTableSound()+"meassurements", (String)count);
+  }
 
-  return getJSON(true);
+  return getJSON(false);
 }
  
 void setupSound()
 {
     pinMode(SOUND_SENSOR, INPUT);
 }
+
 
 

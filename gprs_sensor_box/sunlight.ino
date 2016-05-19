@@ -22,20 +22,21 @@ void setupSunlight() {
 }
 
 String sunlightReading() {
-  resetJSON();
-
   sunlightError = false;
-  
-  addOtherVariable("visible",(String)SI1145.ReadVisible());
-  addOtherVariable("ir",(String)SI1145.ReadIR());
-  //the real UV value must be div 100 from the reg value , datasheet for more information.
-  addOtherVariable("uv", (String)((float)SI1145.ReadUV()/100));
 
   if(SI1145.ReadVisible() == 0 && SI1145.ReadIR() == 0 && SI1145.ReadUV() == 0){
     sunlightError = true;
   }
+  else {
+    addStringVariable(getTableSunlight(),getTableSunlight());
+    addOtherVariable(getTableSunlight()+"visible",(String)SI1145.ReadVisible());
+    addOtherVariable(getTableSunlight()+"ir",(String)SI1145.ReadIR());
+    //the real UV value must be div 100 from the reg value , datasheet for more information.
+    addOtherVariable(getTableSunlight()+"uv", (String)((float)SI1145.ReadUV()/100));
+  }
   
-  return getJSON(true);
+  return getJSON(false);
 }
+
 
 

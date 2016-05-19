@@ -36,73 +36,50 @@ String getTableMultigas(){
 
 String multigasReading(){
   // Temp value to hold reading
-  resetJSON();
   
-  float c;
+  float nh3,co,no2,c3h8,c4h10,ch4,h2,c2h5oh;
   String GasStr;
   
-  for(int i = 1; i < 9; i++){
-    switch (i) {
-      case 1:
-      GasStr = "nh3";
-      c = mutichannelGasSensor.measure_NH3();
-      break;
-
-      case 2:
-      GasStr = "co";
-      c = mutichannelGasSensor.measure_CO();
-      break;
-
-      case 3:
-      GasStr = "no2";
-      c = mutichannelGasSensor.measure_NO2();
-      break;
-
-      case 4:
-      GasStr = "c3h8";
-      c = mutichannelGasSensor.measure_C3H8();
-      break;
-
-      case 5:
-      GasStr = "c4h10";
-      c = mutichannelGasSensor.measure_C4H10();
-      break;
-
-      case 6:
-      GasStr = "ch4";
-      c = mutichannelGasSensor.measure_CH4();
-      break;
-
-      case 7:
-      GasStr = "h2";
-      c = mutichannelGasSensor.measure_H2();
-      break;
-
-      case 8:
-      GasStr = "c2h5oh";
-      c = mutichannelGasSensor.measure_C2H5OH();
-      break;
-
-      default: 
-      Serial.println("ERROR! Multigas - This state should never be reached!");
-      GasStr = "ERROR";
-      c = -255;
-      break;
-    } 
-    if (c <=0) { //If it's lower there's an error
-      errorCount++;
-      addOtherVariable(GasStr, (String)c);
-    }
-    else{
-      addOtherVariable(GasStr, (String)c);
-    }
-  }
-
-  if(errorCount == 8)
+  GasStr = "nh3";
+  nh3 = mutichannelGasSensor.measure_NH3();
+  addOtherVariable(getTableMultigas()+GasStr, (String)nh3);
+  
+  GasStr = "co";
+  co = mutichannelGasSensor.measure_CO();
+  addOtherVariable(getTableMultigas()+GasStr, (String)co);
+  
+  GasStr = "no2";
+  no2 = mutichannelGasSensor.measure_NO2();
+  addOtherVariable(getTableMultigas()+GasStr, (String)no2);
+  
+  GasStr = "c3h8";
+  c3h8 = mutichannelGasSensor.measure_C3H8();
+  addOtherVariable(getTableMultigas()+GasStr, (String)c3h8);
+  
+  GasStr = "c4h10";
+  c4h10 = mutichannelGasSensor.measure_C4H10();
+  addOtherVariable(getTableMultigas()+GasStr, (String)c4h10);
+  
+  GasStr = "ch4";
+  ch4 = mutichannelGasSensor.measure_CH4();
+  addOtherVariable(getTableMultigas()+GasStr, (String)ch4);
+  
+  GasStr = "h2";
+  h2 = mutichannelGasSensor.measure_H2();
+  addOtherVariable(getTableMultigas()+GasStr, (String)h2);
+  
+  GasStr = "c2h5oh";
+  c2h5oh = mutichannelGasSensor.measure_C2H5OH();
+  addOtherVariable(getTableMultigas()+GasStr, (String)c2h5oh);
+      
+  if(nh3 <=0 && co <=0 && no2 <=0 && c3h8 <=0 && c4h10 <=0 && ch4 <=0 && h2 <=0 && c2h5oh <=0 ){
     multigasERROR = true;
-  else
+  }
+  else{
     multigasERROR = false;
-
+    addStringVariable(getTableMultigas(),getTableMultigas());
+  }
   errorCount = 0;
-  return getJSON(true);
+  return getJSON(false);
 }
+

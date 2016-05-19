@@ -23,8 +23,6 @@ String getTableDHT(){
 String getDHT(){
     // Reading temperature or humidity takes about 250 milliseconds!
     // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
-    resetJSON();
-
     float h = dht.getHumi();
     float t = dht.getTemp();
 
@@ -33,12 +31,16 @@ String getDHT(){
     {
         dhtERROR = true;
     }
+    else {
+        addStringVariable(getTableDHT(),getTableDHT());
+        addOtherVariable(getTableDHT()+"temp", (String)t);
+        //addStringVariable("temp_unit", "C");
+        addOtherVariable(getTableDHT()+"hum", (String)h);
+        //addStringVariable("hum_unit", "%");
+    }
 
     dhtERROR = false;
 
-    addOtherVariable("temp", (String)t);
-    addStringVariable("temp_unit", "C");
-    addOtherVariable("hum", (String)h);
-    addStringVariable("hum_unit", "%");
-    return getJSON(true);
+    return getJSON(false);
 }
+

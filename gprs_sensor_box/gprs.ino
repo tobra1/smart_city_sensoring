@@ -45,6 +45,7 @@ bool connectToServer() {
  */
 void post(String data, String table) {
   Serial.print("Sending " ACTION " request to " + table + ": ");
+  Serial.print(data);
   client.println("" ACTION " /" + table + " HTTP/1.1");
   client.println("Host: " SITE_URL ":" + (String)PORT + "");
   client.println("Content-Type: application/json");
@@ -111,4 +112,5 @@ String idGenerator(){
   String r = response();
   return r.substring(r.indexOf("uuid", 0)+8,r.indexOf("uuid", 0)+8+36);
 }
+
 

@@ -84,7 +84,7 @@ void waitForSatellite()
     {
       tmp = getComma(7, GPGGAstr);
       num = getIntNumber(&GPGGAstr[tmp]);
-      if(timer == 300 || num != 0)
+      if(timer == 50 || num != 0)
         break;
       timer++;
       Serial.println("Waiting for sattelites! " + (String)timer + ". run");
@@ -104,7 +104,7 @@ String getLocation(){
   if (!ParseLocation((char*)info.GPGGA)) {  // This is where we break out needed location information
     Serial.println("Couldn't find location!");
   }
-  return getJSON(true);
+  return getJSON(false);
 }
 
 /*
@@ -118,13 +118,13 @@ boolean ParseLocation(char* GPGGAstr)
 // Refer to http://www.gpsinformation.org/dale/nmea.htm#GGA
 // Sample data: $GPGGA,123519,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47
 {
-  //Resets the JSON
-  resetJSON();
 
   //Converting the GPGGA to a string
   String GPSstring = String(GPGGAstr);
 
-  addStringVariable("gpgga",GPSstring);
+  addStringVariable(getTableGPS(),getTableGPS());
+  
+  addStringVariable(getTableGPS()+"gpgga",GPSstring);
 
   //Finding the latitude
   String latTmp = GPSstring.substring(getComma(2,GPGGAstr),getComma(3,GPGGAstr)-1);
@@ -136,7 +136,7 @@ boolean ParseLocation(char* GPGGAstr)
   String(latValue,6).toCharArray(latArray,latTmp.length());
   String latitude = String(atof(latArray),6);
 
-  addOtherVariable("lat",(String)latitude);
+  addOtherVariable(getTableGPS()+"lat",(String)latitude);
   
   //Finding the longitude
   String lngTmp = GPSstring.substring(getComma(4,GPGGAstr),getComma(5,GPGGAstr)-1);
@@ -148,7 +148,7 @@ boolean ParseLocation(char* GPGGAstr)
   String(lngValue,6).toCharArray(lngArray,lngTmp.length());
   String longitude = String(atof(lngArray),6);
   
-  addOtherVariable("lng",(String)longitude);
+  addOtherVariable(getTableGPS()+"lng",(String)longitude);
   
   return 1;
 }
@@ -187,4 +187,5 @@ double getIntNumber(const char *s){
   rev=atoi(buf);
   return rev; 
 }
+
 

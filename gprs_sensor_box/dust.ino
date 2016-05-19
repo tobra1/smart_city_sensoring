@@ -3,7 +3,7 @@ int pin = 8;
 
 unsigned long duration;
 unsigned long starttime;
-unsigned long sampletime_ms = 10000;//sampe 10s ;
+unsigned long sampletime_ms = 30000;//sampe 30s ;
 unsigned long lowpulseoccupancy = 0;
 
 bool dustERROR = false;
@@ -22,7 +22,6 @@ bool isDustError(){
 }
 
 String dustReading(){
-  resetJSON();
   starttime = millis();
   lowpulseoccupancy = 0;
 
@@ -40,12 +39,15 @@ String dustReading(){
   {
     dustERROR = true;
   }
-  
-  addOtherVariable("lowpulseoccupancy", (String)lowpulseoccupancy);
-  addOtherVariable("ratio", (String)ratio);
-  addOtherVariable("concentration", (String)concentration);
-  addStringVariable("concentration_unit", "pcs/0.01cf");
+  else {
+    addStringVariable(getTableDust(),getTableDust());
+    addOtherVariable(getTableDust()+"lowpulseoccupancy", (String)lowpulseoccupancy);
+    addOtherVariable(getTableDust()+"ratio", (String)ratio);
+    addOtherVariable(getTableDust()+"concentration", (String)concentration);
+    //addStringVariable("concentration_unit", "pcs/0.01cf");
+  }
 
-  return getJSON(true);
+  return getJSON(false);
 }
+
 

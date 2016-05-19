@@ -70,8 +70,6 @@ void setupCO2(){
 }
 
 String co2Reading(){
-  resetJSON();
-
   co2Error = false;
   int i = 0;
 
@@ -81,12 +79,16 @@ String co2Reading(){
   {
     co2Error = true;
   }
+  else {
+    addStringVariable(getTableCO2(),getTableCO2());
+    addOtherVariable(getTableCO2()+"temp", (String)CO2temp);
+    //addStringVariable("temp_unit", "C");
+    addOtherVariable(getTableCO2()+"co2", (String)CO2PPM);
+    //addStringVariable("co2_unit", "ppm");
+  }
   
-  addOtherVariable("temp", (String)CO2temp);
-  addStringVariable("temp_unit", "C");
-  addOtherVariable("co2", (String)CO2PPM);
-  addStringVariable("co2_unit", "ppm");
 
-  return getJSON(true);
+  return getJSON(false);
 }
+
 

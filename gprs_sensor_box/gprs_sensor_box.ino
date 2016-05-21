@@ -5,6 +5,12 @@
  * that will run on the device.
  */
 
+//1: defd1a2c-dfc6-480e-9ce6-a432197cacbd
+//2: 0185ccb2-5943-47a2-9a12-7cd8ddb7a060
+//3: 7cf081b2-3d8a-45a8-ad46-19e9e6be1c19
+
+
+
 
 //Libraries
 #include <LEEPROM.h>
@@ -65,13 +71,16 @@ void addIdToEEPROM(){
 void setup() { 
   Serial.begin(115200);
 
-  for(int i = 0; i < 100; i++){
-    EEPROM.write(i, 0);
-  }
+  //for(int i = 0; i < 100; i++){
+  //  EEPROM.write(i, 0);
+  //}
 
   Serial.println("Initialising");
   addIdToEEPROM();
 
+
+  
+  delay(60000);
   Serial.println("Starts sensors");
   setupDHT();
   setupMultigas();
